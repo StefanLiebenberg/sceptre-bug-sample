@@ -2,6 +2,22 @@
 pip2 install -I sceptre==2.0.0
 ```
 
+```bash
+$ sceptre launch -y common
+[2019-03-12 10:18:40] - common/iam - Launching Stack
+[2019-03-12 10:18:40] - common/cluster - Launching Stack
+[2019-03-12 10:18:41] - common/iam - Stack is in the CREATE_COMPLETE state
+[2019-03-12 10:18:41] - common/iam - Updating Stack
+[2019-03-12 10:18:41] - common/cluster - Stack is in the CREATE_COMPLETE state
+[2019-03-12 10:18:41] - common/cluster - Updating Stack
+[2019-03-12 10:18:41] - common/iam - No updates to perform.
+[2019-03-12 10:18:42] - common/cluster - No updates to perform.
+[2019-03-12 10:18:42] - common/launch - Launching Stack
+[2019-03-12 10:18:42] - common/launch - Stack is in the CREATE_COMPLETE state
+[2019-03-12 10:18:42] - common/launch - Updating Stack
+[2019-03-12 10:18:43] - common/launch - No updates to perform.
+```
+
 
 ```bash
 pip2 install -I sceptre==2.1.0 
@@ -10,7 +26,7 @@ pip2 install -I sceptre==2.1.0
 ( Same result for 2.0.1+ )
 
 ```bash
-[stefan@thinker issue]$ sceptre launch -y common
+$ sceptre launch -y common
 Traceback (most recent call last):
   File "/usr/bin/sceptre", line 10, in <module>
     sys.exit(cli())

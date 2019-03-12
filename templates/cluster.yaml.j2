@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: An empty ECS Cluster with Security Group
+Parameters:
+
+  ClusterName:
+    Type: String
+    Description: The cluster name to use
+    Default: ""
+
+Conditions:
+  HasClusterNameCondition: !Not [!Equals [!Ref ClusterName, ""]]
+
+Resources:
+
+  Cluster:
+    Type: 'AWS::ECS::Cluster'
+    Properties:
+      ClusterName: !If [ HasClusterNameCondition, !Ref ClusterName, !Ref "AWS::NoValue" ]
+
+Outputs:
+
+  Cluster:
+    Value: !Ref Cluster
+    Export:
+      Name: !Sub '${AWS::StackName}-Cluster'

@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+
+  ECSAMI:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ecs/optimized-ami/amazon-linux/recommended/image_id
+
+  InstanceType:
+    Type: String
+    Default: t3.small
+
+  Cluster:
+    Type: String
+
+  InstanceProfile:
+    Type: String
+
+Resources:
+
+  LaunchTemplate:
+    Type: "AWS::EC2::LaunchTemplate"
+    Properties:
+      LaunchTemplateData:
+        ImageId: !Ref ECSAMI
+        InstanceType: !Ref InstanceType
+        KeyName: devops-eu-west-1
+        IamInstanceProfile:
+          Name: !Ref InstanceProfile
+        UserData:
+          Fn::Base64:
+            !Sub |
+            Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+            MIME-Version: 1.0
+
+            --==BOUNDARY==
+            Content-Type: text/x-shellscript; charset="us-ascii"
+
+            #!/bin/bash
+            cluster=${Cluster}
+            # Write the cluster config variable to the ecs.config file
+            cat <<'EOF' >> /etc/ecs/ecs.config
+            ECS_CLUSTER=${Cluster}
+            EOF
+            --==BOUNDARY==
+
+Outputs:
+
+  LaunchTemplate:
+    Value: !Ref LaunchTemplate
+    Export:
+      Name: !Sub "${AWS::StackName}-LaunchTemplate"
+
+  LatestVersion:
+    Value:
+      Fn::GetAtt:
+      - LaunchTemplate
+      - LatestVersionNumber
+    Export:
+      Name: !Sub "${AWS::StackName}-LatestVersion"
+
+  DefaultVersion:
+    Value:
+      Fn::GetAtt:
+      - LaunchTemplate
+      - DefaultVersionNumber
+    Export:
+      Name: !Sub "${AWS::StackName}-DefaultVersion"

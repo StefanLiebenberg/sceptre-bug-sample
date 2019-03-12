@@ -1,0 +1,8 @@
+template_path: launch_template.yaml.j2
+dependencies:
+- common/iam.yaml
+- common/cluster.yaml
+parameters:
+  InstanceType: t3.small
+  Cluster: !stack_output cluster.yaml::Cluster
+  InstanceProfile: !stack_output iam.yaml::InstanceProfile

@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+          Action: sts:AssumeRole
+      Path: '/'
+      Policies:
+      - PolicyName: 'ecs-service'
+        PolicyDocument:
+          Statement:
+            Effect: 'Allow'
+            Action:
+            - 'ec2:*'
+            - 'ecs:*'
+            - 'logs:*'
+            - 'logs:PutLogEvents'
+            - "ecr:*"
+            Resource: '*'
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: '/'
+      Roles:
+      - !Ref InstanceRole
+
+
+Outputs:
+
+  InstanceRole:
+    Value: !Ref InstanceRole
+    Export:
+      Name: !Sub "${AWS::StackName}-InstanceRole"
+
+  InstanceProfile:
+    Value: !Ref InstanceProfile
+    Export:
+      Name: !Sub "${AWS::StackName}-InstanceProfile"
